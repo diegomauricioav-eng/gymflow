@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
+         http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>co.ufps.gymflow</groupId>
+    <artifactId>gymflow</artifactId>
+    <version>1.0-SNAPSHOT</version>
+
+    <!--
+        packaging=pom significa que este módulo NO genera ningún archivo
+        ejecutable (.jar ni .war). Su único trabajo es ser el PADRE que
+        coordina a los 4 módulos hijos. Sin esta línea, Maven no acepta
+        la etiqueta <modules> que viene abajo.
+    -->
+    <packaging>pom</packaging>
+
+    <name>gymflow</name>
+
+    <!--
+        Aquí le decimos a Maven cuáles son los módulos hijos.
+        El orden importa: domain primero porque todos dependen de él.
+        Estos nombres deben coincidir EXACTAMENTE con los nombres
+        de las carpetas que crearemos en el siguiente paso.
+    -->
+    <modules>
+        <module>gymflow-domain</module>
+        <module>gymflow-application</module>
+        <module>gymflow-infrastructure</module>
+        <module>gymflow-api</module>
+    </modules>
+
+    <properties>
+        <!--
+            maven.compiler.release=21 le dice a Maven que compile
+            con Java 21. Aplica a todos los módulos hijos automáticamente.
+            Usamos "release" en vez de "source/target" porque release
+            también controla qué APIs del JDK puedes usar.
+        -->
+        <maven.compiler.release>21</maven.compiler.release>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+
+        <!-- Versiones centralizadas — se referencian con ${nombre} -->
+        <jakarta.jakartaee.version>10.0.0</jakarta.jakartaee.version>
+        <mysql.version>8.3.0</mysql.version>
+        <junit.version>5.11.0</junit.version>
+    </properties>
+
+    <!--
+        dependencyManagement = "lista de precios".
+        Las dependencias aquí NO se incluyen en ningún módulo todavía.
+        Solo fijan la versión a usar. Cuando un módulo hijo declare
+        una dependencia sin versión, Maven busca aquí cuál usar.
+        Esto evita que cada módulo ponga versiones distintas
+        de la misma librería.
+    -->
+    <dependencyManagement>
+        <dependencies>
+
+            <!-- Referencias entre módulos del mismo proyecto -->
+            <dependency>
+                <groupId>co.ufps.gymflow</groupId>
+                <artifactId>gymflow-domain</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>co.ufps.gymflow</groupId>
+                <artifactId>gymflow-application</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>co.ufps.gymflow</groupId>
+                <artifactId>gymflow-infrastructure</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+
+            <!--
+                Jakarta EE 10 Web API completo.
+                scope=provided significa: GlassFish ya trae estas clases
+                en tiempo de ejecución. No las incluyas en el .war
+                o habrá conflicto de versiones.
+            -->
+            <dependency>
+                <groupId>jakarta.platform</groupId>
+                <artifactId>jakarta.jakartaee-web-api</artifactId>
+                <version>${jakarta.jakartaee.version}</version>
+                <scope>provided</scope>
+            </dependency>
+
+            <!-- Driver de MySQL — este SÍ va en el .war porque
+                 GlassFish no trae drivers de bases de datos -->
+            <dependency>
+                <groupId>com.mysql</groupId>
+                <artifactId>mysql-connector-j</artifactId>
+                <version>${mysql.version}</version>
+            </dependency>
+
+        </dependencies>
+    </dependencyManagement>
+
+    <!--
+        dependencies (sin Management) = van a TODOS los módulos hijos.
+        Solo ponemos JUnit aquí porque testear es universal.
+    -->
+    <dependencies>
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-api</artifactId>
+            <version>${junit.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-params</artifactId>
+            <version>${junit.version}</version>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <artifactId>maven-compiler-plugin</artifactId>
+                    <version>3.13.0</version>
+                </plugin>
+                <plugin>
+                    <artifactId>maven-war-plugin</artifactId>
+                    <version>3.4.0</version>
+                    <configuration>
+                        <!--
+                            Jakarta EE 10 no requiere web.xml.
+                            Sin esta línea Maven fallaría buscando
+                            un archivo que no necesitamos.
+                        -->
+                        <failOnMissingWebXml>false</failOnMissingWebXml>
+                    </configuration>
+                </plugin>
+                <plugin>
+                    <artifactId>maven-surefire-plugin</artifactId>
+                    <version>3.3.0</version>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+    </build>
+
+</project>
