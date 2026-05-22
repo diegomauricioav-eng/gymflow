@@ -1,4 +1,5 @@
 package co.ufps.gymflow.domain.miembro;
+import co.ufps.gymflow.domain.plan.PlanId;
 
 import java.util.Objects;
 
@@ -11,6 +12,7 @@ public class Miembro{
     private Correo correo;
     private EstadoMiembro estado;
     private String rutaFoto;
+    private PlanId planID;
 
     private Miembro(
             MiembroId miembroID,
@@ -47,7 +49,8 @@ public class Miembro{
             Cedula cedula,
             Correo correo,
             EstadoMiembro estado,
-            String rutaFoto
+            String rutaFoto,
+            PlanId planID
     ){
         Miembro m = new Miembro(
                 miembroID,
@@ -58,11 +61,22 @@ public class Miembro{
                 rutaFoto
         );
         m.estado = estado;
+        m.planID = planID;
         return m;
     }
 
     public void activar() {
         this.estado = EstadoMiembro.ACTIVO;
+    }
+
+    public void asignarPlan(PlanId planID) {
+        this.planID = Objects.requireNonNull(planID, "El ID del plan no puede ser null.");
+        this.activar(); // Este método ya lo tienes creado y cambia el estado a ACTIVO
+    }
+
+    // También agrega su getter por si necesitas consultar el plan del miembro más adelante
+    public PlanId getPlanID() {
+        return planID;
     }
 
     public MiembroId getMiembroID() {

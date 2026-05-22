@@ -10,7 +10,7 @@ public final class MiembroId {
 
     private MiembroId(String valor){
         if (valor == null || valor.isBlank()){
-            throw new ExcepcionDominio("Cédula no puede estar vacía.");
+            throw new ExcepcionDominio("El ID no puede estar vacío.");
         }
         this.valor = valor.strip(); // strip borra espacios en blanco
     }
