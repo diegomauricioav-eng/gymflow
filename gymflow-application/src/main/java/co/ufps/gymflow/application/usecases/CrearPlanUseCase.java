@@ -22,7 +22,7 @@ public class CrearPlanUseCase {
     }
 
     public void ejecutar(CrearPlanDto dto) {
-        // Validar no nombres duplicados
+        // Validar nombres duplicados
         if (repositorioPlan.buscarPorNombre(dto.nombre()).isPresent()) {
             throw new ExcepcionDominio("Ya existe un plan de membresía con el nombre: " + dto.nombre());
         }

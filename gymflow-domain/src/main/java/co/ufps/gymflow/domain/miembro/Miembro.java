@@ -71,7 +71,7 @@ public class Miembro{
 
     public void asignarPlan(PlanId planID) {
         this.planID = Objects.requireNonNull(planID, "El ID del plan no puede ser null.");
-        this.activar(); // Este método ya lo tienes creado y cambia el estado a ACTIVO
+        this.activar();
     }
 
     // También agrega su getter por si necesitas consultar el plan del miembro más adelante
