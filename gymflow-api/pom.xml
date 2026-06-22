@@ -21,6 +21,12 @@
         </dependency>
 
         <dependency>
+            <groupId>co.ufps.gymflow</groupId>
+            <artifactId>gymflow-infrastructure</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
+        <dependency>
             <groupId>jakarta.platform</groupId>
             <artifactId>jakarta.jakartaee-web-api</artifactId>
             <version>${jakarta.jakartaee.version}</version>

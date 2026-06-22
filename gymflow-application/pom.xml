@@ -17,6 +17,12 @@
             <groupId>co.ufps.gymflow</groupId>
             <artifactId>gymflow-domain</artifactId>
         </dependency>
+        <dependency>
+            <groupId>jakarta.platform</groupId>
+            <artifactId>jakarta.jakartaee-web-api</artifactId>
+            <version>10.0.0</version>
+            <scope>provided</scope>
+        </dependency>
     </dependencies>
 
 </project>
